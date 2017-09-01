@@ -3,33 +3,16 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title>Game</title>
-		<style>
-			html, body{
-				margin: 0;
-				padding: 0;
-				width: 100vw;
-				height: 100vh;
-				background-color:black;
-			}
-			#game{
-				width: 100%;
-				height: 100%;
-				transition: .2s linear;
-			}
-			.buttons{
-				position: fixed;
-				z-index: 1000;
-				top: 0;
-				left: 0;
-			}
-		</style>
+		<title>Dots</title>
+		<link rel="stylesheet" type="text/css" href="style.css">
 	</head>
 
 	<body>
-		<div id="game">
+
+		<div id="container">
 			<p>loading game...</p>
 		</div>
+
 		<div class="buttons">
 			<button onclick="add_dot()">add</button>
 			<button onclick="dots_start()">start</button>
@@ -38,127 +21,6 @@
 		</div>
 	</body>
 
-	<script>
-		var container = document.getElementById("game");
-		container.innerHTML = "game loaded";
-		container.style.backgroundColor = 'black';
-
-		var dots = [];
-
-		function add_dot(){
-			dots.push(new Dot(10, container));
-		}
-
-		function dots_exec(f){
-			for (i=0; i<dots.length; i++){
-				f(dots[i]);
-			}
-		}
-
-		function dots_start(){
-			dots_exec(function(dot){
-				dot.start();
-			});
-		}
-
-		function dots_stop(){
-			dots_exec(function(dot){
-				dot.stop();
-			});
-		}
-
-		function dots_center(){
-			dots_exec(function(dot){
-				dot.go_to_center();
-			});
-		}
-
-		function sleep(ms) {
-    	return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    function randint(min, max){
-      return Math.floor((Math.random()*(max-min+1)) + min);
-    }
-
-		function random_color(){
-			//var table = ["red", "blue", "green", "yellow"]
-			var table = ["white", "black"];
-			return table[randint(0, table.length-1)]
-		}
-
-		function create_dot(size){
-			element = document.createElement('div');
-      element.style.width = size + "px";
-      element.style.height= size + "px";
-      element.style.borderRadius = "50%";
-      element.style.backgroundColor = random_color();
-      element.style.transition = "all .8s ease, background-color 5s linear";
-      element.style.position = "absolute";
-      return element;
-		}
-
-		class Dot{
-			constructor(size, container){
-				this.element = create_dot(size);
-				container.appendChild(this.element);
-				this.run = false;
-				this.area_w = document.getElementById("game").offsetWidth;
-        this.area_h = document.getElementById("game").offsetHeight;
-				this.goto = false;
-				this.goto_x = 0;
-				this.goto_y = 0;
-				this.start();
-			}
-
-			reset_area(){
-				this.area_w = document.getElementById("game").offsetWidth;
-				this.area_h = document.getElementById("game").offsetHeight;
-			}
-
-			start(){
-				this.run = true;
-				this.goto = false;
-				this.mv_h();
-				this.mv_v();
-				this.change_color();
-			}
-
-			async mv_h(){
-	      while(this.run && !this.goto){
-	        await sleep(randint(100, 500));
-	      	this.element.style.left = randint(0, this.area_w) + 'px';
-	      }
-				if(this.goto)
-					this.element.style.left = this.area_w/2 + 'px';
-			}
-
-			async mv_v(){
-				while(this.run && !this.goto){
-          await sleep(randint(100, 500));
-          this.element.style.top = randint(0, this.area_h) + 'px';
-        }
-				if(this.goto)
-					this.element.style.top = this.area_h/2 + 'px';
-			}
-
-			async change_color(){
-				while(this.run){
-					await sleep(randint(1000, 2000));
-					this.element.style.backgroundColor = random_color();
-				}
-			}
-
-			go_to_center(){
-				this.goto = true;
-				this.run = false;
-			}
-
-			stop(){
-				this.run = false;
-			}
-		}
-
-	</script>
+	<script src="script.js"></script>
 
 </html>
