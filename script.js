@@ -1,11 +1,15 @@
 /*** DEFINE ***/
 
 var CONTAINER_ID = "container";
-var COLOR_TABLE = ["red", "green", "blue"];
+var COLOR_TABLE = ["red", "blue"];
+
 var SLEEP_MOVE_MIN = 0;
 var SLEEP_MOVE_MAX = 500;
+
 var SLEEP_COLOR_MIN = 0;
 var SLEEP_COLOR_MAX = 2000;
+
+var CELL_WIDTH = 100;
 
 /*** GLOBAL VAR ***/
 
@@ -66,21 +70,18 @@ class Dot{
     this.element = create_dot(size);
     CONTAINER.appendChild(this.element);
     this.run = false;
-    this.goto = false;
     this.start();
   }
 
   start(){
     this.run = true;
-    this.goto = false;
     this.move_horizontal();
     this.move_vertical();
     this.change_color();
   }
 
   center(){
-    this.goto = true;
-    this.run = false;
+    this.goto(AREA_HEIGHT/2, AREA_WIDTH/2);
   }
 
   stop(){
@@ -88,21 +89,17 @@ class Dot{
   }
 
   async move_horizontal(){
-    while(this.run && !this.goto){
-      await sleep(randint(SLEEP_MOVE_MIN, SLEEP_MOVE_MAX));
+    while(this.run){
       this.element.style.left = randleft() + 'px';
+      await sleep(randint(SLEEP_MOVE_MIN, SLEEP_MOVE_MAX));
     }
-    if(this.goto)
-      this.element.style.left = AREA_WIDTH/2 + 'px';
   }
 
   async move_vertical(){
-    while(this.run && !this.goto){
-      await sleep(randint(SLEEP_MOVE_MIN, SLEEP_MOVE_MAX));
+    while(this.run){
       this.element.style.top = randtop() + 'px';
+      await sleep(randint(SLEEP_MOVE_MIN, SLEEP_MOVE_MAX));
     }
-    if(this.goto)
-      this.element.style.top = AREA_HEIGHT/2 + 'px';
   }
 
   async change_color(){
@@ -112,12 +109,28 @@ class Dot{
     }
   }
 
+  centerin(top, left, size){
+    var dot_size = this.element.offsetWidth/2;
+    this.goto(top+size/2-dot_size, left+size/2-dot_size);
+  }
+
+  goto(top, left){
+    this.stop();
+    this.element.style.top  = top  + "px";
+    this.element.style.left = left + "px";
+  }
+
 }
 
 /*** BUTTONS LINKAGE ***/
 
 function add_dot(){
   DOTS.push(new Dot(10));
+}
+
+function add_ten(){
+  for(i=0;i<10;i++)
+    add_dot();
 }
 
 function dots_exec(f){
@@ -142,6 +155,16 @@ function dots_center(){
   dots_exec(function(dot){
     dot.center();
   });
+}
+
+function sort(){
+  var nRows = Math.floor(AREA_HEIGHT/CELL_WIDTH);
+  var nCols = Math.floor(AREA_WIDTH /CELL_WIDTH);
+  for (i=0; i<DOTS.length; i++){
+    var col = (i % nCols);
+    var row = Math.floor(i/nRows);
+    DOTS[i].centerin(row*CELL_WIDTH, col*CELL_WIDTH, CELL_WIDTH);
+  }
 }
 
 /*** SETUP ***/
