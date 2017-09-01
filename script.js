@@ -1,7 +1,7 @@
 /*** DEFINE ***/
 
 var CONTAINER_ID = "container";
-var COLOR_TABLE = ["red", "blue"];
+var COLOR_TABLE = ["white"];
 
 var SLEEP_MOVE_MIN = 0;
 var SLEEP_MOVE_MAX = 500;
@@ -10,6 +10,40 @@ var SLEEP_COLOR_MIN = 0;
 var SLEEP_COLOR_MAX = 2000;
 
 var CELL_WIDTH = 100;
+var LETTER_CELL_WIDTH = 12;
+var LETTER_CELL_MARGIN = 6;
+var WORD_MARGIN = 30;
+
+var ALPHABET = {}
+ALPHABET["A"] = [false, true, true, false, true, false, false, true, true, true, true, true, true, false, false, true, true, false, false, true];
+ALPHABET["B"] = [true, true, true, false, true, false, false, true, true, true, true, false, true, false, false, true, true, true, true, false];
+ALPHABET["C"] = [false, true, true, true, true, false, false, false, true, false, false, false, true, false, false, false, false, true, true, true];
+ALPHABET["D"] = [true, true, true, false, true, false, false, true, true, false, false, true, true, false, false, true, true, true, true, false];
+ALPHABET["E"] = [true, true, true, true, true, false, false, false, true, true, true, false, true, false, false, false, true, true, true, true];
+ALPHABET["F"] = [true, true, true, true, true, false, false, false, true, true, true, false, true, false, false, false, true, false, false, false];
+ALPHABET["G"] = [false, true, true, true, true, false, false, false, true, false, true, true, true, false, false, true, false, true, true, true];
+ALPHABET["H"] = [true, false, false, true, true, false, false, true, true, true, true, true, true, false, false, true, true, false, false, true];
+ALPHABET["I"] = [false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false];
+ALPHABET["J"] = [false, false, false, true, false, false, false, true, false, false, false, true, true, false, false, true, false, true, true, false];
+ALPHABET["K"] = [true, false, false, true, true, false, true, false, true, true, false, false, true, false, true, false, true, false, false, true];
+ALPHABET["L"] = [true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, true, true, false];
+ALPHABET["M"] = [true, false, false, true, true, true, true, true, true, false, false, true, true, false, false, true, true, false, false, true];
+ALPHABET["N"] = [true, false, false, true, true, false, false, true, true, true, false, true, true, false, true, true, true, false, false, true];
+ALPHABET["O"] = [false, true, true, false, true, false, false, true, true, false, false, true, true, false, false, true, false, true, true, false];
+ALPHABET["P"] = [true, true, true, false, true, false, false, true, true, true, true, false, true, false, false, false, true, false, false, false];
+ALPHABET["Q"] = [false, true, true, false, true, false, false, true, true, false, false, true, true, false, true, true, false, true, true, true];
+ALPHABET["R"] = [true, true, true, false, true, false, false, true, true, true, true, false, true, false, true, false, true, false, false, true];
+ALPHABET["S"] = [false, true, true, true, true, false, false, false, false, true, true, false, false, false, false, true, true, true, true, false];
+ALPHABET["T"] = [true, true, true, false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false];
+ALPHABET["U"] = [true, false, false, true, true, false, false, true, true, false, false, true, true, false, false, true, true, true, true, true];
+ALPHABET["V"] = [true, false, false, true, true, false, false, true, true, false, false, true, true, false, false, true, false, true, true, false];
+ALPHABET["W"] = [true, false, false, true, true, false, false, true, true, false, false, true, true, true, true, true, false, true, true, false];
+ALPHABET["X"] = [true, false, false, true, true, false, false, true, false, true, true, false, false, true, true, false, true, false, false, true];
+ALPHABET["Y"] = [true, false, true, false, true, false, true, false, true, true, true, false, false, true, false, false, false, true, false, false];
+ALPHABET["Z"] = [true, true, true, true, false, false, false, true, false, false, true, false, false, true, false, false, true, true, true, true];
+ALPHABET["!"] = [false, true, false, false, false, true, false, false, false, true, false, false, false, false, false, false, false, true, false, false];
+ALPHABET["."] = [false, false, false, false, false, false, false ,false, false, false, false, false, false, false, false, false, true, false, false, false];
+ALPHABET["?"] = [false, true, true, true, false, false, false, true, false, false, true, false, false, false, false, false, false, false, true, false];
 
 /*** GLOBAL VAR ***/
 
@@ -120,6 +154,11 @@ class Dot{
     this.element.style.left = left + "px";
   }
 
+  async centerin_wait(top, left, size){
+    await sleep(randint(SLEEP_MOVE_MIN, SLEEP_COLOR_MAX));
+    this.centerin(top, left, size);
+  }
+
 }
 
 /*** BUTTONS LINKAGE ***/
@@ -167,8 +206,74 @@ function sort(){
   }
 }
 
+/*** LETTERS ***/
+
+function get_required_dots(word){
+  var count = 0;
+  for (i=0; i<word.length; i++){
+    if (word[i]!=" "){
+      for (j=0; j<ALPHABET[word[i]].length; j++){
+        if (ALPHABET[word[i]][j])
+            count++;
+      }
+    }
+  }
+  return count;
+}
+
+function spawn_required_dots(word){
+  while(DOTS.length < get_required_dots(word))
+    add_dot();
+}
+
+function write_word(word){
+  var index = 0;
+  var letter_height = 5*LETTER_CELL_WIDTH;
+  var letter_width  = 4*LETTER_CELL_WIDTH;
+  var word_top = AREA_HEIGHT/2-letter_height/2;
+  var word_left = AREA_WIDTH/2-(word.length*letter_width)/2;
+  spawn_required_dots(word);
+  for (i=0; i<word.length; i++){
+    if (word[i]!=" "){
+      for (j=0; j<ALPHABET[word[i]].length; j++){
+        if (ALPHABET[word[i]][j]){
+          var col = (j % 4);
+          var row = Math.floor(j/4);
+          var top = word_top + row*LETTER_CELL_WIDTH;
+          DOTS[index].centerin_wait(word_top+row*LETTER_CELL_WIDTH, word_left+col*LETTER_CELL_WIDTH, LETTER_CELL_WIDTH);
+          index++;
+        }
+      }
+      word_left += letter_width + LETTER_CELL_MARGIN;
+    } else {
+      word_left += WORD_MARGIN;
+    }
+  }
+  return true;
+}
+
+function parseWord(input){
+  var tmp = input.toUpperCase();
+  var buff = "";
+  for (i=0; i<tmp.length; i++){
+    var char = tmp[i];
+    if ((char.charCodeAt(0) > 64 && char.charCodeAt(0) < 91) || char==" " || char=="." || char=="!" || char=="?"){
+        buff+=char;
+    }
+  }
+  return buff;
+}
+
+function writer(){
+  var word = parseWord(document.getElementById("input").value);
+  if (DOTS.length < get_required_dots(word)){
+    spawn_required_dots(word);
+  }
+  dots_start();
+  write_word(word);
+}
+
 /*** SETUP ***/
 
 init_container();
-add_dot();
 window.onresize = init_area;
