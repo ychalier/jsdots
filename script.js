@@ -1,7 +1,7 @@
 /*** DEFINE ***/
 
 var CONTAINER_ID = "container";
-var COLOR_TABLE = ["white"];
+var COLOR_TABLE = ["red", "green", "blue"];
 var SLEEP_MOVE_MIN = 0;
 var SLEEP_MOVE_MAX = 500;
 var SLEEP_COLOR_MIN = 0;
