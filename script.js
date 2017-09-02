@@ -105,6 +105,7 @@ class Dot{
     CONTAINER.appendChild(this.element);
     this.run = false;
     this.start();
+    this.index = DOTS.length;
   }
 
   start(){
@@ -120,6 +121,15 @@ class Dot{
 
   stop(){
     this.run = false;
+  }
+
+  delete(){
+    if(this.index < DOTS.length-1){
+      DOTS[this.index] = DOTS[DOTS.length - 1];
+      DOTS[this.index] = this.index;
+    }
+    DOTS.pop();
+    CONTAINER.removeChild(this.element);
   }
 
   async move_horizontal(){
@@ -196,6 +206,16 @@ function dots_center(){
   });
 }
 
+function dots_delete(){
+  DOTS[DOTS.length-1].delete();
+}
+
+function dots_clear(){
+  for (i=DOTS.length-1; i>=0; i--){
+    DOTS[i].delete();
+  }
+}
+
 function sort(){
   var nRows = Math.floor(AREA_HEIGHT/CELL_WIDTH);
   var nCols = Math.floor(AREA_WIDTH /CELL_WIDTH);
@@ -248,6 +268,9 @@ function write_word(word){
     } else {
       word_left += WORD_MARGIN;
     }
+  }
+  for (i=DOTS.length-1; i>=index; i--){
+    DOTS[i].delete();
   }
   return true;
 }
