@@ -46,6 +46,13 @@ html, body{
   margin: 10px;
 }
 
+.sm{
+  margin-left: 4px;
+  margin-right: 4px;
+  width: 48px;
+  text-align: center;
+}
+
 .buttons > input{
   padding: 10px;
   border-radius: 0;

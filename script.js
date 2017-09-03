@@ -259,7 +259,6 @@ function write_word(word){
         if (ALPHABET[word[i]][j]){
           var col = (j % 4);
           var row = Math.floor(j/4);
-          var top = word_top + row*LETTER_CELL_WIDTH;
           DOTS[index].centerin_wait(word_top+row*LETTER_CELL_WIDTH, word_left+col*LETTER_CELL_WIDTH, LETTER_CELL_WIDTH);
           index++;
         }
