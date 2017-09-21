@@ -44,6 +44,17 @@ ALPHABET["Z"] = [true, true, true, true, false, false, false, true, false, false
 ALPHABET["!"] = [false, true, false, false, false, true, false, false, false, true, false, false, false, false, false, false, false, true, false, false];
 ALPHABET["."] = [false, false, false, false, false, false, false ,false, false, false, false, false, false, false, false, false, true, false, false, false];
 ALPHABET["?"] = [false, true, true, true, false, false, false, true, false, false, true, false, false, false, false, false, false, false, true, false];
+ALPHABET["0"] = [false, true, true, false, true, false, false, true, true, false, false, true, true, false, false, true, false, true, true, false];
+ALPHABET["1"] = [false, false, true, false, false, true, true, false, false, false, true, false, false, false, true, false, false, false, true, false];
+ALPHABET["2"] = [false, true, true, false, true, false, false, true, false, false, true, false, false, true, false, false, true, true, true, true];
+ALPHABET["3"] = [false, true, true, false, true, false, false, true, false, false, true, false, true, false, false, true, false, true, true, false];
+ALPHABET["4"] = [false, false, true, false, false, true, true, false, true, false, true, false, true, true, true, true, false, false, true, false];
+ALPHABET["5"] = [true, true, true, true, true, false, false, false, true, true, true, false, false, false, false, true, true, true, true, false];
+ALPHABET["6"] = [false, true, true, false, true, false, false, false, true, true, true, false, true, false, false, true, false, true, true, false];
+ALPHABET["7"] = [true, true, true, true, false, false, false, true, false, false, true, false, false, true, false, false, true, false, false, false];
+ALPHABET["8"] = [false, true, true, false, true, false, false, true, false, true, true, false, true, false, false, true, false, true, true, false];
+ALPHABET["9"] = [true, true, true, true, true, false, false, true, true, true, true, true, false, false, false, true, true, true, true, true];
+
 
 /*** GLOBAL VAR ***/
 
@@ -279,7 +290,7 @@ function parseWord(input){
   var buff = "";
   for (i=0; i<tmp.length; i++){
     var char = tmp[i];
-    if ((char.charCodeAt(0) > 64 && char.charCodeAt(0) < 91) || char==" " || char=="." || char=="!" || char=="?"){
+    if ((char.charCodeAt(0) > 64 && char.charCodeAt(0) < 91) || (char.charCodeAt(0) > 47 && char.charCodeAt(0) < 58) || char==" " || char=="." || char=="!" || char=="?"){
         buff+=char;
     }
   }
